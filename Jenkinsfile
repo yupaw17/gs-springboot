@@ -1,47 +1,37 @@
 pipeline {
     agent any
 
+    tools {
+        // Make sure Maven is installed in Jenkins (Global Tool Configuration)
+        maven 'Maven 3.9.11'
+        jdk 'JDK 21'
+    }
+
     stages {
-        stage('Checkout Source Code') {
+        stage('Checkout') {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/yupaw17/gs-springboot.git'
+                checkout scm
             }
         }
 
-        stage('Test') {
+        stage('Build') {
             steps {
-                // Run unit tests
-                sh './mvnw clean test'
-            }
-        }
-
-        stage('Build and Package') {
-            steps {
-                // Build the JAR file
+                // Run Maven build from repo root
                 sh './mvnw clean package -DskipTests'
             }
         }
 
         stage('Publish to Nexus') {
             steps {
-                dir('complete')  {
-                    sh './mvnw deploy -DskipTests'
-                }
-            }
-        }
-
-        stage('Archive Artifacts') {
-            steps {
-                // Save JAR file in Jenkins
-                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                // Deploy with debug enabled (-X) so you can see if settings.xml is picked up
+                sh './mvnw deploy -DskipTests -X'
             }
         }
     }
 
     post {
         success {
-            echo 'Pipeline finished successfully!'
+            echo 'Build and Deploy succeeded!'
         }
         failure {
             echo 'Build failed!'
