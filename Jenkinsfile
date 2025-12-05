@@ -10,15 +10,19 @@ pipeline {
 
         stage('Build') {
             steps {
-                // Use Maven wrapper from repo root
-                sh './mvnw clean package -DskipTests'
+                bat 'mvnw.cmd clean package -DskipTests'
+            }
+        }
+
+        stage('Verify Maven Settings') {
+            steps {
+                bat 'mvnw.cmd help:effective-settings -X'
             }
         }
 
         stage('Deploy to Nexus') {
             steps {
-                // Deploy with debug enabled to trace settings.xml and repository config
-                sh './mvnw deploy -DskipTests -X'
+                bat 'mvnw.cmd deploy -DskipTests -X'
             }
         }
     }
