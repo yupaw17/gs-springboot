@@ -30,3 +30,25 @@ pipeline {
 
         stage('Publish to Nexus') {
             steps {
+                // Deploy artifact to Nexus (requires distributionManagement in pom.xml)
+                sh './mvnw deploy -DskipTests'
+            }
+        }
+
+        stage('Archive Artifacts') {
+            steps {
+                // Save JAR file in Jenkins
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline finished successfully!'
+        }
+        failure {
+            echo 'Build failed!'
+        }
+    }
+}
