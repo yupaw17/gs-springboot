@@ -1,12 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        // Make sure Maven is installed in Jenkins (Global Tool Configuration)
-        maven 'Maven 3.9.11'
-        jdk 'JDK 21'
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -16,14 +10,14 @@ pipeline {
 
         stage('Build') {
             steps {
-                // Run Maven build from repo root
+                // Use Maven wrapper from repo root
                 sh './mvnw clean package -DskipTests'
             }
         }
 
-        stage('Publish to Nexus') {
+        stage('Deploy to Nexus') {
             steps {
-                // Deploy with debug enabled (-X) so you can see if settings.xml is picked up
+                // Deploy with debug enabled to trace settings.xml and repository config
                 sh './mvnw deploy -DskipTests -X'
             }
         }
@@ -31,10 +25,10 @@ pipeline {
 
     post {
         success {
-            echo 'Build and Deploy succeeded!'
+            echo '✅ Build and deploy succeeded!'
         }
         failure {
-            echo 'Build failed!'
+            echo '❌ Build failed. Check console output for Maven errors.'
         }
     }
 }
