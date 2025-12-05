@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven_3.9.11'
-        jdk 'jdk-21'
+        maven 'Maven 3.9.11'
+        jdk 'JDK 21'
     }
 
     stages {
@@ -37,7 +37,6 @@ pipeline {
 
         stage('Archive Artifacts') {
             steps {
-                // Save JAR file in Jenkins
                 archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
         }
