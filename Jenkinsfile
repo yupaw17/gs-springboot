@@ -2,27 +2,15 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Build') {
             steps {
                 sh './mvnw clean package -DskipTests'
             }
         }
 
-        stage('Verify Maven Settings') {
-            steps {
-                sh './mvnw help:effective-settings -X'
-            }
-        }
-
         stage('Deploy to Nexus') {
             steps {
-                sh './mvnw deploy -DskipTests -X'
+                sh './mvnw deploy -f pom.xml -DskipTests -X'
             }
         }
     }
