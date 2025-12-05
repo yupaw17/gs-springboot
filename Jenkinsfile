@@ -25,8 +25,9 @@ pipeline {
 
         stage('Publish to Nexus') {
             steps {
-                // Deploy artifact to Nexus (requires distributionManagement in pom.xml)
-                sh './mvnw deploy -DskipTests'
+                dir('complete')  {
+                    sh './mvnw deploy -DskipTests'
+                }
             }
         }
 
