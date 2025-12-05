@@ -10,19 +10,19 @@ pipeline {
 
         stage('Build') {
             steps {
-                bat 'mvnw.cmd clean package -DskipTests'
+                sh './mvnw clean package -DskipTests'
             }
         }
 
         stage('Verify Maven Settings') {
             steps {
-                bat 'mvnw.cmd help:effective-settings -X'
+                sh './mvnw help:effective-settings -X'
             }
         }
 
         stage('Deploy to Nexus') {
             steps {
-                bat 'mvnw.cmd deploy -DskipTests -X'
+                sh './mvnw deploy -DskipTests -X'
             }
         }
     }
