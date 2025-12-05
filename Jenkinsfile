@@ -10,7 +10,7 @@ pipeline {
 
         stage('Deploy to Nexus') {
             steps {
-                sh './mvnw deploy -DskipTests -DaltDeploymentRepository=nexus-snapshots::default::http://localhost:8081/repository/maven-snapshots/ -X'
+                sh './mvnw deploy -DskipTests -DaltDeploymentRepository=nexus-snapshots::default::http://host.docker.internal:8081/repository/maven-snapshots/ -X'
             }
         }
     }
